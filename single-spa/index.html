@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <p onclick="a()">子应用1</p>
+  <p onclick="b()">子应用2</p>
+  <script src="./lib/umd/single-spa.js"></script>
+  <script>
+    function a(){
+      window.history.pushState({},"",'#/app1')
+    }
+    function b(){
+      window.history.pushState({},"",'#/app2')
+    }
+    // 注册应用
+    singleSpa.registerApplication('app1',(props)=>{
+        return {
+          bootstrap: async (props) => { // 可以传递一个函数或者一个数组函数
+            console.log('bootstrap1')
+          },
+          mount: async (props) => {
+            console.log('mount1')
+          },
+          unmount: async (props) => {
+            console.log('unmount1')
+          }
+        }
+      },
+      location => location.hash.startsWith('#/app1'), // hash路由 返回true表示要挂载
+      // location => location.pathname.startsWith('/app1'), // 返回true表示要挂载
+      {
+        store: {
+          name: 'hahaha'
+        }
+      }
+    )
+    // 启动应用
+    singleSpa.start()
+
+    // 注册应用
+    singleSpa.registerApplication('app2',(props)=>{
+        return {
+          bootstrap: async (props) => {
+            console.log('bootstrap2')
+          },
+          mount: async (props) => {
+            console.log('mount2')
+          },
+          unmount: async (props) => {
+            console.log('unmount2')
+          }
+        }
+      },
+      location => location.hash.startsWith('#/app2'), // hash路由 返回true表示要挂载
+      // location => location.pathname.startsWith('/app2'), // 返回true表示要挂载
+      {
+        store: {
+          name: 'hahaha'
+        }
+      }
+    )
+    // 启动应用
+    singleSpa.start()
+  </script>
+</body>
+</html>
